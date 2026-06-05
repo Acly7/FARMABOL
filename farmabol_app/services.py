@@ -13,6 +13,8 @@ class ProductService:
 
         if not code or not name or not laboratory:
             return False, 'Completa todos los campos del producto.', {}
+        if len(code) < 3:
+            return False, 'El codigo debe tener al menos 3 caracteres.', {}
 
         try:
             price = float(form.get('price', '0'))
@@ -65,6 +67,9 @@ class SaleService:
             return False, 'El producto seleccionado no existe.'
         if product['stock'] < quantity:
             return False, 'No hay suficiente stock para completar la venta.'
+        if product['stock'] - quantity < 5:
+            # Se permite vender, pero queda registrado como alerta visual en el dashboard.
+            pass
 
         total = round(product['price'] * quantity, 2)
         with get_connection() as conn:
