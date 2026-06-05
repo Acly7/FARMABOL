@@ -1,0 +1,3 @@
+# Opcional para una revision parecida a la solicitada en clase:
+# pip install pylint
+# pylint farmabol_app app.py
