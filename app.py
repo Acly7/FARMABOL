@@ -1,12 +1,30 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
+import sqlite3
 
 PORT = 8000
+DB = 'farmabol.db'
 
-USERS = {
-    'admin': {'password': 'admin123', 'role': 'ADMIN', 'name': 'Administrador'},
-    'vendedor': {'password': 'vendedor123', 'role': 'VENDEDOR', 'name': 'Vendedor'}
-}
+PRODUCTS = [
+    ('MED001', 'Paracetamol 500mg', 4.50, 20, 'Bago'),
+    ('MED002', 'Ibuprofeno 400mg', 6.00, 4, 'Inti')
+]
+
+def init_db():
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    cur.execute('CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT, password TEXT, role TEXT, name TEXT)')
+    cur.execute('CREATE TABLE IF NOT EXISTS products(id INTEGER PRIMARY KEY, code TEXT, name TEXT, price REAL, stock INTEGER, laboratory TEXT)')
+    cur.execute('CREATE TABLE IF NOT EXISTS sales(id INTEGER PRIMARY KEY, product_id INTEGER, quantity INTEGER, total REAL, created_at TEXT DEFAULT CURRENT_TIMESTAMP)')
+    cur.execute('SELECT COUNT(*) FROM users')
+    if cur.fetchone()[0] == 0:
+        cur.execute("INSERT INTO users(username,password,role,name) VALUES('admin','admin123','ADMIN','Administrador')")
+        cur.execute("INSERT INTO users(username,password,role,name) VALUES('vendedor','vendedor123','VENDEDOR','Vendedor')")
+    cur.execute('SELECT COUNT(*) FROM products')
+    if cur.fetchone()[0] == 0:
+        cur.executemany('INSERT INTO products(code,name,price,stock,laboratory) VALUES(?,?,?,?,?)', PRODUCTS)
+    conn.commit()
+    conn.close()
 
 class App(BaseHTTPRequestHandler):
     def send_html(self, html):
@@ -16,34 +34,23 @@ class App(BaseHTTPRequestHandler):
         self.wfile.write(html.encode('utf-8'))
 
     def do_GET(self):
+        init_db()
         if self.path == '/':
-            self.send_html('''
-            <h1>FARMABOL</h1>
-            <form method="post" action="/login">
-                <input name="username" placeholder="Usuario">
-                <input name="password" type="password" placeholder="Contraseña">
-                <button>Entrar</button>
-            </form>
-            ''')
-            return
-        self.send_response(404)
-        self.end_headers()
-
-    def do_POST(self):
-        if self.path == '/login':
-            length = int(self.headers.get('Content-Length', '0'))
-            data = parse_qs(self.rfile.read(length).decode())
-            username = data.get('username', [''])[0]
-            password = data.get('password', [''])[0]
-            user = USERS.get(username)
-            if user and user['password'] == password:
-                self.send_html(f'<h1>Bienvenido {user["name"]}</h1><p>Rol: {user["role"]}</p>')
-            else:
-                self.send_html('<h1>Error</h1><p>Usuario o contraseña incorrectos.</p>')
-            return
-        self.send_response(404)
-        self.end_headers()
+            self.send_html('<h1>FARMABOL</h1><p>Login y módulo base.</p>')
+        elif self.path == '/productos':
+            conn = sqlite3.connect(DB)
+            rows = conn.execute('SELECT code,name,price,stock,laboratory FROM products').fetchall()
+            conn.close()
+            html = '<h1>Productos</h1><ul>'
+            for row in rows:
+                html += f'<li>{row[0]} - {row[1]} - Bs {row[2]} - Stock {row[3]} - {row[4]}</li>'
+            html += '</ul>'
+            self.send_html(html)
+        else:
+            self.send_response(404)
+            self.end_headers()
 
 if __name__ == '__main__':
+    init_db()
     print(f'Servidor iniciado en http://localhost:{PORT}')
     HTTPServer(('0.0.0.0', PORT), App).serve_forever()
