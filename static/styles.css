@@ -54,6 +54,13 @@ nav a:hover, nav a.active { background: rgba(255, 255, 255, .14); }
 
 .main { min-height: 100vh; padding: 28px; }
 .main.with-sidebar { margin-left: 255px; }
+.main.login-main {
+    min-height: 100vh;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .topbar {
     display: flex;
     justify-content: space-between;
@@ -86,20 +93,21 @@ h1 { margin: 0; color: var(--blue); }
 }
 
 .login-card {
-    min-height: calc(100vh - 56px);
+    width: 100%;
+    min-height: auto;
     display: grid;
-    grid-template-columns: 1fr 420px;
-    gap: 26px;
+    grid-template-columns: 1.12fr 430px;
+    gap: 30px;
     align-items: center;
-    max-width: 1050px;
+    max-width: 1120px;
     margin: 0 auto;
 }
 .login-info {
     background: linear-gradient(135deg, var(--blue), #0f477f);
     color: var(--white);
     border-radius: 30px;
-    padding: 45px;
-    min-height: 420px;
+    padding: 52px;
+    min-height: 450px;
     box-shadow: 0 20px 55px rgba(11, 45, 92, .28);
 }
 .login-info h2 { font-size: 45px; margin: 22px 0 8px; }
@@ -119,7 +127,7 @@ h1 { margin: 0; color: var(--blue); }
     border-radius: 22px;
     box-shadow: 0 12px 36px rgba(34, 55, 90, .08);
 }
-.form-panel { padding: 30px; }
+.form-panel { padding: 34px; }
 .form-panel h2, .panel h2 { margin-top: 0; color: var(--blue); }
 label { display: block; font-weight: bold; margin: 14px 0 6px; }
 input, select {
@@ -195,5 +203,7 @@ th, td { padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-alig
     .sidebar { position: static; width: auto; }
     .main.with-sidebar { margin-left: 0; }
     .login-card, .grid-two, .cards { grid-template-columns: 1fr; }
+    .main.login-main { padding: 24px; align-items: flex-start; }
+    .login-info { min-height: auto; }
     .topbar { flex-direction: column; align-items: flex-start; }
 }

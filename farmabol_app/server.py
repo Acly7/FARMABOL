@@ -47,7 +47,7 @@ def read_session_cookie(cookie_value: str | None) -> dict | None:
         return None
 
 
-def layout(title: str, body: str, user: dict | None = None, active: str = '') -> str:
+def layout(title: str, body: str, user: dict | None = None, active: str = '', show_header: bool = True) -> str:
     menu = ''
     user_box = ''
     if user:
@@ -80,6 +80,19 @@ def layout(title: str, body: str, user: dict | None = None, active: str = '') ->
             </nav>
         </aside>
         '''
+
+    header = ''
+    if show_header:
+        header = f'''
+        <header class="topbar">
+            <div>
+                <h1>{escape(title)}</h1>
+                <p>Farmacias Bolivianas Unidas - control rápido de stock y ventas.</p>
+            </div>
+            {user_box}
+        </header>
+        '''
+
     return f'''<!doctype html>
 <html lang="es">
 <head>
@@ -90,14 +103,8 @@ def layout(title: str, body: str, user: dict | None = None, active: str = '') ->
 </head>
 <body>
     {menu}
-    <main class="main {'with-sidebar' if user else ''}">
-        <header class="topbar">
-            <div>
-                <h1>{escape(title)}</h1>
-                <p>Farmacias Bolivianas Unidas - control rapido de stock y ventas.</p>
-            </div>
-            {user_box}
-        </header>
+    <main class="main {'with-sidebar' if user else 'login-main'}">
+        {header}
         {body}
     </main>
 </body>
@@ -130,7 +137,7 @@ def login_page(error: str = '') -> str:
         </form>
     </section>
     '''
-    return layout('Login', body)
+    return layout('Login', body, show_header=False)
 
 
 def dashboard_page(user: dict) -> str:
