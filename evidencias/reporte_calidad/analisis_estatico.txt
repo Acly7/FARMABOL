@@ -1,0 +1,25 @@
+REPORTE DE ANALISIS ESTATICO - FARMABOL
+Herramienta: quality_report.py (revision estatica local)
+
+Archivos Python revisados: 9
+Lineas utiles de codigo: 789
+Funciones detectadas: 47
+Clases detectadas: 7
+Lineas duplicadas estimadas: 159
+Funciones largas (>80 lineas): 0
+Comentarios TODO encontrados: 8
+Errores de compilacion: 0
+Puntaje estimado de calidad: 7.5/10
+
+Detalle por archivo:
+- app.py: 3 lineas, 0 funciones, 0 clases, duplicadas 0
+- quality_report.py: 82 lineas, 2 funciones, 0 clases, duplicadas 2
+- farmabol_app/__init__.py: 1 lineas, 0 funciones, 0 clases, duplicadas 0
+- farmabol_app/config.py: 5 lineas, 0 funciones, 0 clases, duplicadas 0
+- farmabol_app/db.py: 83 lineas, 5 funciones, 0 clases, duplicadas 18
+- farmabol_app/repositories.py: 106 lineas, 10 funciones, 3 clases, duplicadas 41
+- farmabol_app/services.py: 73 lineas, 6 funciones, 2 clases, duplicadas 6
+- farmabol_app/server.py: 422 lineas, 22 funciones, 1 clases, duplicadas 92
+- tests/test_core.py: 14 lineas, 2 funciones, 1 clases, duplicadas 0
+
+Resultado: no se encontraron errores de compilacion en los archivos Python.
