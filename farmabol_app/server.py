@@ -400,7 +400,7 @@ class FarmabolHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
-        if path == '/login':
+        if path in ('/', '/login'):
             form = self.parse_form()
             user = UserRepository().find_by_credentials(form.get('username', ''), form.get('password', ''))
             if not user:
